@@ -7,6 +7,7 @@ object StreamsExercise {
 
   /**
     * Creates infinite sequence of natural numbers starting from {@code n} .
+    *
     * @param n the fist number of the sequence
     * @return infinite sequence of naturals
     */
@@ -14,6 +15,7 @@ object StreamsExercise {
 
   /**
     * Infinite sequence of a, 2*a, 2*2*a,..
+    *
     * @param a starting number
     * @return Infinite sequence of a, 2*a, 2*2*a,..
     */
@@ -28,6 +30,7 @@ object StreamsExercise {
   /**
     * Defines the sequence of all fibonacci numbers starting with the two
     * defined as parameters.
+    *
     * @param fib1 the second fibonacci number
     * @param fib2 the first fibonacci number
     * @return fibonacci numbers' sequence
@@ -41,6 +44,7 @@ object StreamsExercise {
 
   /**
     * Returns the biggest number of specified digits.
+    *
     * @example 99 is the biggest number of 2 digits and 999 is the biggest with 3 digits.
     * @param digits number of digits
     * @return the biggest number with <code>n</code> digits
@@ -49,6 +53,7 @@ object StreamsExercise {
 
   /**
     * Calculates the sum of digits of <code>number</code>
+    *
     * @param number natural number
     * @return the sum of the digits of <code>number</code>
     * @see Don't do it with 'for' expressions. Instead transform the number to it's
@@ -61,6 +66,7 @@ object StreamsExercise {
 
   /**
     * Calculates the sum of digits powered by 3 of <code>number</code>
+    *
     * @param number natural number
     * @return the sum of the digits powered by 3 of <code>number</code>
     * @example sumOfDigitsPowThree(153) = 1*1*1 + 5*5*5 + 3*3*3 = 153
@@ -75,8 +81,20 @@ object StreamsExercise {
   /**
     * TASK1 - find all natural numbers which sum of the third powers of the their digits
     * is equal to the number itself.
+    *
     * @example 153 = 1*1*1 + 5*5*5 + 3*3*3
     */
+  def numberSumOfTirdPowersEqItself(nowNumber: Int, nowList: List[Integer]) : List[Integer] = {
+
+    if (nowNumber > capOfDigitsSizeTask1){
+        return nowList
+    }
+    if(nowNumber.equals(sumOfDigitsPowThree(nowNumber)))
+      numberSumOfTirdPowersEqItself(nowNumber+1, nowList.::(nowNumber))
+    else
+      numberSumOfTirdPowersEqItself(nowNumber+1, nowList)
+
+  }
 
   /**
     * With the growth of the number's number of digits its value grows by 10 and the sum of third powers
@@ -86,32 +104,42 @@ object StreamsExercise {
     *
     * Find which is the maximum sizeof digits where it's still possible to have number with such digit
     * size satisfying the TASK1 condition.
+    *
     * @example for numbers of 6 digits theirs sum of the third powers of the digits is maximum 6x(9^3),
     *          which is 4374 and it's number with only 4 digits, much less that the minimum number of
     *          6 digits: 100000.
     * @see do not use 'for' operators, implement it based on the streams of all natural numbers and
     *      find the desired number based on that stream.
     */
-  val capOfDigitsSizeTask1 = ???
+  val capOfDigitsSizeTask1 =  cap(1)
+
+  def cap(num: Int): Integer = {
+    if(!naturals(0).to(num.toString.length*sumOfDigitsPowThree(9)).contains(num)){
+      return num
+    }
+    return cap(num+1)
+  }
 
   /**
     * The stream of all numbers which may satisfy the TASK1 (defined above) conditions
+    *
     * @see Actually it is a stream computed from a range from 1 to the maximum number of
     *      the calculated capOfDigitsSizeTask1 digits.
     */
-  lazy val rangeStreamTask1 = ???
+  lazy val rangeStreamTask1 = naturals(0).to(capOfDigitsSizeTask1)
 
   /**
     * The stream of all numbers satisfying Task1 condition.
     */
-  lazy val resultStreamTask1 = ???
+  lazy val resultStreamTask1 = numberSumOfTirdPowersEqItself(1,Nil);
 
-
+  lazy val naturals: Stream[Int] = Stream.cons(0, naturals.map{_ + 1})
   def main(args: Array[String]): Unit = {
-    println("The fifth fibonacci number is " + fibFrom(1,1)(4))
 
-//    println("Task1 numbers are " + resultStreamTask1.toList)
-    // the expected result is List(1, 153, 370, 371, 407)
+        println(rangeStreamTask1)
+
+        println("Task1 numbers are " + resultStreamTask1.toList)
+        // the expected result is List(1, 153, 370, 371, 407)
 
   }
 }
